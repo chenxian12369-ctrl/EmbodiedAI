@@ -37,7 +37,14 @@ def get_battery():
 
     return battery
 
+def check_obstacle(distance):
+    if distance < 1:
 
+        return True
+
+    else:
+
+        return False
 
 # 主程序
 
@@ -62,14 +69,22 @@ print(
     "当前电量:",
     power
 )
-
-
-if power < 20:
-
-    charge()
-
+#
+result = check_obstacle(2)
+if result == True:
+    print("停止")
 else:
+    print("go on")
+#
+    if power < 20:
 
-    print(
-        "电量正常，继续工作"
-    )
+        charge()
+        print(
+            "电量正常，继工作"
+        )
+
+    else:
+
+        print(
+            "电量正常，继续工作"
+        )

@@ -1,0 +1,106 @@
+print("====================")
+print("机器人对象系统")
+print("====================")
+
+
+class Robot:
+
+
+    def __init__(self,name,battery):
+
+        self.name = name
+
+        self.battery = battery
+
+        self.location="FAB1"
+
+
+
+    def start(self):
+
+        print(
+            self.name,
+            "启动"
+        )
+
+
+
+    def move(self,direction):
+
+        print(
+            self.name,
+            "移动方向:",
+            direction
+        )
+
+
+
+    def charge(self):
+
+        self.battery = 100
+
+        print(
+            self.name,
+            "充电完成"
+        )
+
+
+
+    def status(self):
+
+        print(
+            "机器人:",
+            self.name
+        )
+
+        print(
+            "电量:",
+            self.battery
+        )
+    def change_battery(self, value):
+        self.battery = value
+    def change_location(self,new_location):
+
+        self.location=new_location
+
+# 创建机器人
+
+
+robot1 = Robot(
+    "Robot_A01",
+    80
+)
+
+
+robot2 = Robot(
+    "Robot_A02",
+    60
+)
+
+
+
+robot1.start()
+
+robot1.move("前方")
+
+robot1.status()
+
+
+
+print()
+
+robot1.change_battery(50)
+
+robot2.change_battery(90)
+
+robot1.status()
+
+robot2.status()
+
+robot2.start()
+
+robot2.move("右侧")
+
+robot2.status()
+
+robot1.change_location("FAB2")
