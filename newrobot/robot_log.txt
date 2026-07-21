@@ -1,0 +1,3 @@
+Robot Start
+Battery:80
+Location:FAB1
