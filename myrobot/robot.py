@@ -60,3 +60,16 @@ class Robot:
     def change_location(self,new_location):
 
         self.location=new_location
+class TransportRobot(Robot):
+    def move_box(self):
+
+        print(self.name, "正在搬运晶圆")
+class CleaningRobot(Robot):
+    def clean(self):
+
+        print(self.name, "正在清洁地面")
+class InspectRobot(Robot):
+
+    def inspect(self):
+
+        print(self.name, "开始巡检")
