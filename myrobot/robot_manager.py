@@ -9,13 +9,12 @@ class RobotManager:
         self.robots.append(robot)
 
     def show_all(self):
-        print()
         print("机器人列表")
         print("----------------")
-
         for robot in self.robots:
             robot.status()
             print("----------------")
+            print(robot.__class__.__name__)
 
     def find_robot(self, name):
         for robot in self.robots:
@@ -61,3 +60,9 @@ class RobotManager:
     def charge_all(self):
         for robot in self.robots:
             robot.charge()
+    def work_all(self):
+
+        for robot in self.robots:
+
+            robot.work()
+    

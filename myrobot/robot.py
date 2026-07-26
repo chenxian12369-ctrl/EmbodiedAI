@@ -19,16 +19,26 @@ class Robot:
             self.name,
             "启动"
         )
+    def repair(self):
+        if self.battery <= 0:
 
+            print(self.name, "机器人维修完成")
+
+            return
+        else:
+            print(self.name, "机器人正常")
 
 
     def move(self,direction):
-        self.battery -=10
-        print(
-            self.name,
-            "移动方向:",
-            direction
-        )
+        if self.battery <= 0:
+
+            print(self.name, "没有电")
+
+            return
+
+        print(self.name, "移动方向：", direction)
+
+        self.battery -= 10
 
 
 
@@ -64,12 +74,23 @@ class TransportRobot(Robot):
     def move_box(self):
 
         print(self.name, "正在搬运晶圆")
-class CleaningRobot(Robot):
-    def clean(self):
-
-        print(self.name, "正在清洁地面")
+    def work(self):
+        print(self.name, "正在搬运晶圆")
 class InspectRobot(Robot):
 
     def inspect(self):
 
         print(self.name, "开始巡检")
+    def work(self):
+        print(self.name, "开始巡检设备")
+class CleaningRobot(Robot):
+    def clean(self):
+
+        print(self.name, "正在清洁地面")
+    def work(self):
+        print(self.name, "正在清洁地面")
+class SecurityRobot(Robot):
+    
+    
+    def work(self):
+        print(self.name, "正在夜间巡逻")

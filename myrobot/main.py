@@ -2,17 +2,38 @@ from robot import Robot
 from robot import TransportRobot
 from robot import CleaningRobot
 from robot import InspectRobot
+from robot import SecurityRobot
 from robot_manager import RobotManager
 
 
 
 manager = RobotManager()
 
-robot1 = TransportRobot("搬运",80)
+robot1 = TransportRobot("A01",100)
 
-robot2 = InspectRobot("巡检",60)
-robot3 = CleaningRobot("巡检",60)
+robot2 = InspectRobot("A02",0)
 
+robot3 = CleaningRobot("A03",50)
+
+manager.add_robot(robot1)
+
+manager.add_robot(robot2)
+
+manager.add_robot(robot3)
+
+
+manager.work_all()
+
+manager.move_all("前方")
+
+robot1.repair()
+
+robot2.repair()
+
+robot3.repair()
+
+
+'''day11
 robot1.status()
 
 robot1.move_box()
@@ -26,6 +47,20 @@ robot3.status()
 robot3.charge()
 
 robot3.clean()
+robot1.work()
+
+robot2.work()
+
+robot3.work()
+manager.add_robot(robot1)
+
+manager.add_robot(robot2)
+
+manager.add_robot(robot3)
+manager.add_robot(robot4)
+
+manager.show_all()
+'''
 '''
 robot1 = Robot("Robot_A01",80)
 
