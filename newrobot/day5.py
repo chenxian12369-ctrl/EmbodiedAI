@@ -79,9 +79,7 @@ else:
     if power < 20:
 
         charge()
-        print(
-            "电量正常，继工作"
-        )
+       
 
     else:
 
