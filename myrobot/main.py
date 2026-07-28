@@ -6,10 +6,14 @@ from robot.security_robot import SecurityRobot
 from manager.robot_manager import RobotManager
 from config.settings import DEFAULT_DIRECTION
 from config.settings import SYSTEM_NAME
-
+from utils.logger import write_log
 print("=" * 30)
 print(SYSTEM_NAME)
 print("=" * 30)
+
+write_log(
+    "==========系统启动=========="
+)
 
 def start_system():
 
