@@ -2,7 +2,7 @@ from robot.transport_robot import TransportRobot
 from robot.inspect_robot import InspectRobot
 from robot.cleaning_robot import CleaningRobot
 from robot.security_robot import SecurityRobot
-
+from robot.robot import Robot
 from manager.robot_manager import RobotManager
 from config.settings import DEFAULT_DIRECTION
 from config.settings import SYSTEM_NAME
@@ -20,7 +20,7 @@ def start_system():
     manager = RobotManager()
 
     robot1 = TransportRobot("A01", 70)
-    robot2 = InspectRobot("A02", 5)
+    robot2 = InspectRobot("A02", 0)
     robot3 = CleaningRobot("A03", 50)
     robot4 = SecurityRobot("A04", 80)
 
@@ -28,13 +28,31 @@ def start_system():
     manager.add_robot(robot2)
     manager.add_robot(robot3)
     manager.add_robot(robot4)
-
+    robot1.start()
+    manager.work_all()
+    manager.remove_robot("A04")
     manager.robot_count()
     manager.show_all()
     manager.check_all_battery()
-    manager.work_all()
     manager.move_all(DEFAULT_DIRECTION)
+    manager.charge_all()
 
 
 if __name__ == "__main__":
     start_system()
+    Robot.system_author()
+
+    Robot.system_name()
+
+    Robot.show_version()
+    print(Robot.check_battery(80))
+
+    print(Robot.check_battery(150))
+
+    print(Robot.check_battery(-5))
+
+    Robot.battery_level(90)
+
+    Robot.battery_level(40)
+
+    Robot.battery_level(10)

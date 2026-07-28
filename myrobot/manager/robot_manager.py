@@ -11,16 +11,16 @@ class RobotManager:
         write_log(
         f"{robot.name} 已加入系统"
         )
-
+    
     def remove_robot(self, name):
         for robot in self.robots:
             if robot.name == name:
                 self.robots.remove(robot)
                 print(name, "已删除")
-            write_log(
-            f"{name} 已删除"
-            )
-            return
+                write_log(
+                    f"{name} 已删除"
+                )
+                return
 
         print("机器人不存在")
 

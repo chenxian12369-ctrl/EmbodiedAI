@@ -1,6 +1,44 @@
 from utils.logger import write_log
 class Robot:
+    @staticmethod
+    def show_version():
 
+        print("Robot System v1.0")
+    @staticmethod
+    @staticmethod
+    def system_author():
+
+        print("Author: Chen Xian")
+    @staticmethod
+    def system_name():
+
+        print("Semiconductor Robot System")
+    @staticmethod
+    def check_battery(value):
+
+        if value < 0:
+
+            return False
+
+        if value > 100:
+
+            return False
+
+        return True
+    @staticmethod
+    def battery_level(level):
+
+        if level >= 80:
+
+            print("高电量")
+
+        elif level >= 30:
+
+            print("中电量")
+
+        else:
+
+            print("低电量")
     def __init__(self, name, battery):
         self.name = name
         self.battery = battery
@@ -25,7 +63,7 @@ class Robot:
 
     def move(self, direction):
         
-        if self.battery <= 0:
+        if self.battery <= 20:
             write_log(f"{self.name} 电量不足，移动失败")
             print(self.name, "没有电")
             return
