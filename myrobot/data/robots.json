@@ -1,14 +1,14 @@
 [
     {
         "name": "A01",
-        "battery": 100
+        "battery": 70
     },
     {
         "name": "A02",
-        "battery": 100
+        "battery": 50
     },
     {
         "name": "A03",
-        "battery": 100
+        "battery": 80
     }
 ]

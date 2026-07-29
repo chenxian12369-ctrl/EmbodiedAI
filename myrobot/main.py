@@ -7,6 +7,8 @@ from manager.robot_manager import RobotManager
 from config.settings import DEFAULT_DIRECTION
 from config.settings import SYSTEM_NAME
 from utils.logger import write_log
+from robot.robot_factory import RobotFactory
+from utils.config_loader import load_config
 print("=" * 30)
 print(SYSTEM_NAME)
 print("=" * 30)
@@ -19,28 +21,29 @@ def start_system():
 
     manager = RobotManager()
 
-    robot1 = TransportRobot("A01", 70)
-    robot2 = InspectRobot("A02", 0)
-    robot3 = CleaningRobot("A03", 50)
-    robot4 = SecurityRobot("A04", 80)
+    robots_config = load_config(
+        "config/robots_config.json"
+    )   
 
-    manager.add_robot(robot1)
-    manager.add_robot(robot2)
-    manager.add_robot(robot3)
-    manager.add_robot(robot4)
-    robot1.start()
+    for data in robots_config:
+
+        robot = RobotFactory.create_robot(data)
+
+        manager.add_robot(robot)
+    # robot1.start()
     manager.work_all()
-    manager.remove_robot("A04")
-    manager.robot_count()
-    manager.show_all()
-    manager.check_all_battery()
-    manager.move_all(DEFAULT_DIRECTION)
-    manager.charge_all()
-    manager.load_all()
-    manager.save_all()
-    robots_data = manager.load_data()
+    # day21代码
+    # manager.remove_robot("A04")
+    # manager.robot_count()
+    # manager.show_all()
+    # manager.check_all_battery()
+    # manager.move_all(DEFAULT_DIRECTION)
+    # manager.charge_all()
+    # manager.load_all()
+    # manager.save_all()
+    # robots_data = manager.load_data()
 
-    print(robots_data)
+    # print(robots_data)
 
     manager.load_all()
 
