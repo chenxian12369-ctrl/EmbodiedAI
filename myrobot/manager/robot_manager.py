@@ -1,5 +1,9 @@
 from config.settings import LOW_BATTERY_LEVEL
 from utils.logger import write_log
+from config.settings import DATA_FILE
+import json
+from robot.robot import Robot
+
 
 class RobotManager:
 
@@ -30,6 +34,77 @@ class RobotManager:
                 return robot
 
         return None
+    def save_all(self):
+    # """
+    # 将所有机器人信息保存到JSON文件。
+    # """
+        robots_data = []
+
+        for robot in self.robots:
+            robots_data.append(robot.to_dict())
+
+        with open(DATA_FILE, "w", encoding="utf-8") as file:
+            json.dump(
+                robots_data,
+                file,
+                ensure_ascii=False,
+                indent=4
+            )
+    def load_all(self):
+        """
+        从JSON文件读取机器人数据
+        """
+
+        try:
+
+            with open(
+                DATA_FILE,
+                "r",
+                encoding="utf-8"
+            ) as file:
+
+                robots_data = json.load(file)
+
+
+        except FileNotFoundError:
+
+            print("机器人数据文件不存在")
+            write_log(
+            "读取失败：机器人数据文件不存在"
+            )
+
+            return
+
+
+        except json.JSONDecodeError:
+
+            print("JSON格式错误")
+            write_log(
+            "JSON格式错误"
+            )
+
+
+            return
+
+
+        print("机器人数据读取成功")
+
+    def load_data(self):
+        """
+        从JSON文件读取机器人字典数据。
+        """
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as file:
+                robots_data = json.load(file)
+
+            return robots_data
+
+        except FileNotFoundError:
+            print("机器人数据文件不存在")
+            return []
+
+
+    print("机器人数据保存成功")
 
     def robot_count(self):
         print("机器人数量：", len(self.robots))

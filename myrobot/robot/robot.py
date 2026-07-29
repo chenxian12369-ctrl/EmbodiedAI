@@ -39,6 +39,16 @@ class Robot:
         else:
 
             print("低电量")
+    @classmethod
+    def from_dict(cls, data):
+        """
+        根据字典创建Robot对象
+        """
+
+        return cls(
+            data["name"],
+            data["battery"]
+        )
     def __init__(self, name, battery):
         self.name = name
         self.battery = battery
@@ -49,10 +59,28 @@ class Robot:
         write_log(
         f"{self.name} 启动"
         )
+    
     def status(self):
         print("机器人：", self.name)
         print("电量：", self.battery)
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "battery": self.battery,
+     
+        }
+    @classmethod
+    def from_dict(cls, data):
+        """
+        根据字典创建机器人对象
+        """
+        robot = cls(
+            data["name"],
+            data["battery"]
+        )
 
+
+        return robot
     def charge(self):
 
         self.battery = 100

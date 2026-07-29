@@ -36,23 +36,38 @@ def start_system():
     manager.check_all_battery()
     manager.move_all(DEFAULT_DIRECTION)
     manager.charge_all()
+    manager.load_all()
+    manager.save_all()
+    robots_data = manager.load_data()
+
+    print(robots_data)
+
+    manager.load_all()
+
+    manager.show_all()
+    
 
 
 if __name__ == "__main__":
     start_system()
-    Robot.system_author()
+    # day17代码
+    # Robot.system_author()
 
-    Robot.system_name()
+    # Robot.system_name()
 
-    Robot.show_version()
-    print(Robot.check_battery(80))
+    # Robot.show_version()
+    # print(Robot.check_battery(80))
 
-    print(Robot.check_battery(150))
+    # print(Robot.check_battery(150))
 
-    print(Robot.check_battery(-5))
+    # print(Robot.check_battery(-5))
 
-    Robot.battery_level(90)
+    # Robot.battery_level(90)
 
-    Robot.battery_level(40)
+    # Robot.battery_level(40)
 
-    Robot.battery_level(10)
+    # Robot.battery_level(10)
+    # day18代码
+    # robot1 = Robot("A01", 70)
+    # print(robot1.to_dict())
+    
