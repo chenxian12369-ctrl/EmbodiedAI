@@ -3,6 +3,7 @@ from robot.inspect_robot import InspectRobot
 from robot.cleaning_robot import CleaningRobot
 from robot.security_robot import SecurityRobot
 from robot.delivery_robot import DeliveryRobot
+from robot.medical_robot import MedicalRobot
 
 class RobotFactory:
     """
@@ -14,7 +15,8 @@ class RobotFactory:
         "InspectRobot": InspectRobot,
         "CleaningRobot": CleaningRobot,
         "SecurityRobot": SecurityRobot,
-        "DeliveryRobot": DeliveryRobot
+        "DeliveryRobot": DeliveryRobot,
+        "MedicalRobot": MedicalRobot
     }
 
     @staticmethod

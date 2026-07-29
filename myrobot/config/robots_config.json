@@ -22,4 +22,10 @@
     "name": "A05",
     "battery": 85
     }
+    ,
+    {
+    "type": "MedicalRobot",
+    "name": "A06",
+    "battery": 90
+    }
 ]

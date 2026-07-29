@@ -1,4 +1,5 @@
 from utils.logger import write_log
+
 class Robot:
     @staticmethod
     def show_version():
@@ -101,9 +102,11 @@ class Robot:
         f"{self.name} 向 {direction} 移动"
         )
         self.battery -= 10
-
+    """
+    子类必须重写此方法
+    """
     def work(self):
-        print(self.name, "开始工作")
+        pass
 
     def repair(self):
         if self.battery == 0:
