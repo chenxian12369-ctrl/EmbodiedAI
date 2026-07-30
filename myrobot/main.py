@@ -74,16 +74,12 @@ if __name__ == "__main__":
     # robot1 = Robot("A01", 70)
     # print(robot1.to_dict())
     
-    robot = TransportRobot("A07", 70)
+    robot = Robot("A01", 70)
 
-    print(robot.get_battery())
+    print(robot.battery)
 
-    robot.set_battery(40)
-    print(robot.get_battery())
+    robot.battery = 30
 
-    try:
-        robot.set_battery(200)
-    except ValueError as error:
-        print("修改失败：", error)
+    print(robot.battery)
 
-    print("当前电量：", robot.get_battery())
+    robot.battery = 300
