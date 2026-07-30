@@ -50,9 +50,25 @@ class Robot:
             data["name"],
             data["battery"]
         )
+    # 初始化
     def __init__(self, name, battery):
-        self.name = name
-        self.battery = battery
+            self.name = name
+            self._battery = 0
+
+            self.set_battery(battery)
+
+    def set_battery(self, battery):
+
+        if not isinstance(battery, int):
+            raise TypeError("电量必须是整数")
+
+        if battery < 0 or battery > 100:
+            raise ValueError("电量必须在0到100之间")
+
+        self._battery = battery
+    def get_battery(self):
+        return self._battery
+    
     def start(self):
 
         print(self.name,"启动")
@@ -63,7 +79,7 @@ class Robot:
     
     def status(self):
         print("机器人：", self.name)
-        print("电量：", self.battery)
+        print("电量：", self._battery)
     def to_dict(self):
         return {
             "name": self.name,
