@@ -57,19 +57,33 @@
 # print(a/2)
 # print([3,5]+[2,1])day30
 
+
+
+# day31a = np.array([
+#     [1,2,3],
+#     [4,5,6]
+# ])
+
+# print(a)
+# print(a + 10)
+# print(a * 2)
+# b = np.array([10,20,30])
+
+# print(a+b)
+# print(a-1)
+
+# print(a/2)
 import numpy as np
 
-a = np.array([
-    [1,2,3],
-    [4,5,6]
+A = np.array([
+    [1,2],
+    [3,4]
 ])
 
-print(a)
-print(a + 10)
-print(a * 2)
-b = np.array([10,20,30])
-
-print(a+b)
-print(a-1)
-
-print(a/2)
+B = np.array([
+    [5],
+    [6]
+])
+print(A@B)
+print(A*2)
+print(A@A)
