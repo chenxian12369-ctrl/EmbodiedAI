@@ -87,3 +87,24 @@ B = np.array([
 print(A@B)
 print(A*2)
 print(A@A)
+
+
+
+a = np.array([1,0])
+
+b = np.array([1,0])
+
+c = np.array([0,1])
+
+d = np.array([-1,0])
+
+
+print(a @ b)
+
+print(a @ c)
+
+print(a @ d)
+move = np.array([3,4])
+length = np.linalg.norm(move)
+
+print(length)
