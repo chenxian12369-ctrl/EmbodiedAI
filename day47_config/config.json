@@ -1,0 +1,11 @@
+{
+    "camera":{
+        "fps":30,
+        "resolution":640
+    },
+
+    "robot":{
+        "name":"A01",
+        "battery":100
+    }
+}
