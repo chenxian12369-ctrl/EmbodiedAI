@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../myrobot"
+		},
+		{
+			"path": "../../robot_ros2"
+		}
+	],
+	"settings": {}
+}

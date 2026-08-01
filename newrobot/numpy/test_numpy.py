@@ -75,36 +75,172 @@
 # print(a/2)
 import numpy as np
 
-A = np.array([
-    [1,2],
-    [3,4]
+# A = np.array([
+#     [1,2],
+#     [3,4]
+# ])
+
+# B = np.array([
+#     [5],
+#     [6]
+# ])
+# print(A@B)
+# print(A*2)
+# print(A@A)
+
+
+
+# a = np.array([1,0])
+
+# b = np.array([1,0])
+
+# c = np.array([0,1])
+
+# d = np.array([-1,0])
+
+
+# print(a @ b)
+
+# print(a @ c)
+
+# print(a @ d)
+# move = np.array([3,4])
+# length = np.linalg.norm(move)
+
+# print(length)
+
+# point = np.array([
+#     1,
+#     0
+# ])
+
+
+# R = np.array([
+#     [0,-1],
+#     [1,0]
+# ])
+
+
+# new_point = R @ point
+
+
+# print(new_point)
+# point = np.array([
+#     1,
+#     2,
+#     1
+# ])
+
+
+# T = np.array([
+#     [1,0,10],
+#     [0,1,5],
+#     [0,0,1]
+# ])
+
+
+# new_point = T @ point
+
+
+# print(new_point)
+
+# point=np.array([
+#     1,
+#     0
+# ])
+
+
+# R=np.array([
+#     [0,-1],
+#     [1,0]
+# ])
+
+
+# print(R @ point)
+# R=np.array([
+#     [-1,0],
+#     [0,-1]
+# ])
+# print(R @ point)
+import numpy as np
+
+
+T=np.array([
+    [1,0,10],
+    [0,1,5],
+    [0,0,1]
 ])
 
-B = np.array([
-    [5],
-    [6]
+
+p=np.array([
+    2,
+    3,
+    1
 ])
-print(A@B)
-print(A*2)
-print(A@A)
 
 
+print(T@p)
 
-a = np.array([1,0])
+T1=np.array([
+    [1,0,10],
+    [0,1,0],
+    [0,0,1]
+])
 
-b = np.array([1,0])
+T2=np.array([
+    [1,0,0],
+    [0,1,5],
+    [0,0,1]
+])
 
-c = np.array([0,1])
+point=np.array([
+    1,
+    1,
+    1
+])
 
-d = np.array([-1,0])
+print(T@point)
 
 
-print(a @ b)
+# 平移
+T=np.array([
+    [1,0,10],
+    [0,1,0],
+    [0,0,1]
+])
 
-print(a @ c)
 
-print(a @ d)
-move = np.array([3,4])
-length = np.linalg.norm(move)
+# 旋转90度
+R=np.array([
+    [0,-1,0],
+    [1,0,0],
+    [0,0,1]
+])
 
-print(length)
+
+point=np.array([
+    1,
+    0,
+    1
+])
+
+
+print("先平移再旋转")
+print(R@T@point)
+
+
+print("先旋转再平移")
+print(T@R@point)
+
+T_robot_camera = np.array([
+    [1,0,2],
+    [0,1,0],
+    [0,0,1]
+])
+T_world_robot = np.array([
+    [1,0,10],
+    [0,1,0],
+    [0,0,1]
+])
+T_world_camera = T_world_robot @ T_robot_camera
+print(T_world_camera)
