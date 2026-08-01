@@ -1,45 +1,38 @@
+from utils.logger import write_log
+
+
 class Robot:
 
 
-    def __init__(self,name):
+    def __init__(self,name,battery):
 
-        self.name = name
-        self.gripper = False
-
-
-
-    def open_gripper(self):
-
-        self.gripper = True
-
-        print(
-            self.name,
-            "夹爪打开"
-        )
-
-        return True
+        self.name=name
+        self.battery=battery
 
 
-
-    def close_gripper(self):
-
-        self.gripper = False
-
-        print(
-            self.name,
-            "夹爪关闭"
-        )
-
-        return True
     def move(self,target):
 
-        print("开始移动到",target)
+        print(
+            self.name,
+            "移动到",
+            target
+        )
 
-        for i in [20,50,80,100]:
+        write_log(
+            f"{self.name}移动到{target}"
+        )
 
-            print("进度:",i,"%")
 
-        print("移动完成")
+        self.battery -= 10
+
 
         return True
 
+
+
+    def status(self):
+
+        return {
+            "name":self.name,
+            "battery":self.battery
+        }
