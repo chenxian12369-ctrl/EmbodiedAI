@@ -31,3 +31,15 @@ class Robot:
         )
 
         return True
+    def move(self,target):
+
+        print("开始移动到",target)
+
+        for i in [20,50,80,100]:
+
+            print("进度:",i,"%")
+
+        print("移动完成")
+
+        return True
+
