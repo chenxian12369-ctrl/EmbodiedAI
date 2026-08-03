@@ -18,6 +18,10 @@ print(cv2.__version__)
 from vision.camera import Camera
 from vision.image_processor import ImageProcessor
 
+from vision.camera import Camera
+from vision.image_processor import ImageProcessor
+
+
 def test_vision():
 
     camera = Camera()
@@ -26,34 +30,48 @@ def test_vision():
         "images/test.jpg"
     )
 
-    print(
-        "原始图片形状：",
-        image.shape
-    )
-
     resized_image = ImageProcessor.resize(
         image,
         640,
         480
     )
 
-    print(
-        "缩放后形状：",
-        resized_image.shape
-    )
-    cropped_image = ImageProcessor.crop(
-    image,
-    300,
-    500,
-    1000,
-    1500
-    )
-    ImageProcessor.save(
-    cropped_image,
-    "images/output/cropped.jpg"
-)
     gray_image = ImageProcessor.to_gray(
         resized_image
+    )
+
+    binary_image = ImageProcessor.threshold(
+        gray_image,
+        127
+    )
+
+    edge_image = ImageProcessor.detect_edges(
+        gray_image,
+        100,
+        200
+    )
+    binary_50 = ImageProcessor.threshold(
+    gray_image,
+    50
+    )
+
+    binary_200 = ImageProcessor.threshold(
+        gray_image,
+        200
+    )
+    ImageProcessor.save(
+        binary_50,
+        "images/output/binary_50.jpg"
+    )
+
+    ImageProcessor.save(
+        binary_200,
+        "images/output/binary_200.jpg"
+    )
+
+    print(
+        "原始图形状：",
+        image.shape
     )
 
     print(
@@ -61,14 +79,24 @@ def test_vision():
         gray_image.shape
     )
 
-    ImageProcessor.save(
-        resized_image,
-        "images/output/resized.jpg"
+    print(
+        "二值图形状：",
+        binary_image.shape
+    )
+
+    print(
+        "边缘图形状：",
+        edge_image.shape
     )
 
     ImageProcessor.save(
-        gray_image,
-        "images/output/gray.jpg"
+        binary_image,
+        "images/output/binary.jpg"
+    )
+
+    ImageProcessor.save(
+        edge_image,
+        "images/output/edges.jpg"
     )
 
 
