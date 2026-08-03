@@ -20,6 +20,10 @@ from vision.image_processor import ImageProcessor
 
 from vision.camera import Camera
 from vision.image_processor import ImageProcessor
+from vision.detector import Detector
+
+
+
 
 
 def test_vision():
@@ -41,8 +45,22 @@ def test_vision():
     )
 
     binary_image = ImageProcessor.threshold(
-        gray_image,
-        127
+            gray_image,
+            127
+        )
+    contours = Detector.find_contours(
+
+        binary_image
+
+    )
+
+
+    print(
+
+        "轮廓数量：",
+
+        len(contours)
+
     )
 
     edge_image = ImageProcessor.detect_edges(
@@ -97,6 +115,21 @@ def test_vision():
     ImageProcessor.save(
         edge_image,
         "images/output/edges.jpg"
+    )
+    contour_image = ImageProcessor.draw_contours(
+
+    resized_image,
+
+    contours
+
+)
+
+    ImageProcessor.save(
+
+        contour_image,
+
+        "images/output/contours.jpg"
+
     )
 
 

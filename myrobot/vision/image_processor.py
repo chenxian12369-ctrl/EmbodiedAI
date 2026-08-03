@@ -79,3 +79,23 @@ class ImageProcessor:
             "图片保存成功：",
             path
         )
+    @staticmethod
+    def draw_contours(image, contours):
+
+        result = image.copy()
+
+        cv2.drawContours(
+
+            result,
+
+            contours,
+
+            -1,
+
+            (0,255,0),
+
+            2
+
+        )
+
+        return result
