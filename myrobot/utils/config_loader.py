@@ -22,3 +22,16 @@ def load_config(path):
         print("配置文件不存在")
 
         return []
+class ConfigLoader:
+
+
+    @staticmethod
+    def load(path):
+
+        with open(
+            path,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            return json.load(f)

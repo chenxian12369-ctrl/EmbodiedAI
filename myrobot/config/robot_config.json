@@ -1,0 +1,22 @@
+{
+    "system":{
+        "name":"FAB Robot System",
+        "log_level":"INFO"
+    },
+
+
+    "robots":[
+        {
+            "type":"TransportRobot",
+            "name":"A01",
+            "battery":80
+        },
+
+
+        {
+            "type":"InspectRobot",
+            "name":"A02",
+            "battery":50
+        }
+    ]
+}
