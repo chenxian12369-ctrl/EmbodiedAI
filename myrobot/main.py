@@ -16,19 +16,76 @@ import cv2
 print(cv2.__version__)
 
 from vision.camera import Camera
+from vision.image_processor import ImageProcessor
 
+def test_vision():
 
-camera=Camera()
+    camera = Camera()
 
+    image = camera.capture(
+        "images/test.jpg"
+    )
 
-image=camera.capture(
-    "test.jpg"
+    print(
+        "原始图片形状：",
+        image.shape
+    )
+
+    resized_image = ImageProcessor.resize(
+        image,
+        640,
+        480
+    )
+
+    print(
+        "缩放后形状：",
+        resized_image.shape
+    )
+    cropped_image = ImageProcessor.crop(
+    image,
+    300,
+    500,
+    1000,
+    1500
+    )
+    ImageProcessor.save(
+    cropped_image,
+    "images/output/cropped.jpg"
 )
+    gray_image = ImageProcessor.to_gray(
+        resized_image
+    )
+
+    print(
+        "灰度图形状：",
+        gray_image.shape
+    )
+
+    ImageProcessor.save(
+        resized_image,
+        "images/output/resized.jpg"
+    )
+
+    ImageProcessor.save(
+        gray_image,
+        "images/output/gray.jpg"
+    )
 
 
-print(type(image))
+test_vision()
 
-print(image.shape)
+# day49
+# camera=Camera()
+
+
+# image=camera.capture(
+#     "test.jpg"
+# )
+
+
+# print(type(image))
+
+# print(image.shape)
 
 
 # print("=" * 30)
