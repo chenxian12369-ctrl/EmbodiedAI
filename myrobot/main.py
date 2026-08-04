@@ -21,6 +21,9 @@ from vision.image_processor import ImageProcessor
 from vision.camera import Camera
 from vision.image_processor import ImageProcessor
 from vision.detector import Detector
+from vision.camera import Camera
+from vision.detector import Detector
+from vision.image_processor import ImageProcessor
 
 
 
@@ -46,7 +49,7 @@ def test_vision():
 
     binary_image = ImageProcessor.threshold(
             gray_image,
-            127
+            220
         )
     contours = Detector.find_contours(
 
@@ -131,7 +134,67 @@ def test_vision():
         "images/output/contours.jpg"
 
     )
+     # 先复制原图，后面在副本上持续画图
+    result_image = resized_image.copy()
 
+    # 6. 绘制所有轮廓
+    result_image = ImageProcessor.draw_contours(
+        result_image,
+        contours
+    )
+
+    # 7. 依次计算每个轮廓的中心
+    for index, contour in enumerate(
+        contours,
+        start=1
+    ):
+
+        center = Detector.find_center(
+            contour
+        )
+
+        if center is None:
+            print(
+                f"轮廓{index}无法计算中心"
+            )
+
+            continue
+
+        print(
+            f"轮廓{index}中心坐标：",
+            center
+        )
+
+        result_image = ImageProcessor.draw_center(
+            result_image,
+            center
+        )
+
+    # 8. 保存最终结果
+    ImageProcessor.save(
+        result_image,
+        "images/output/centers.jpg"
+    )
+    print("轮廓总数：", len(contours))
+# reason for can not count
+    for index, contour in enumerate(contours[:20], start=1):
+        area = cv2.contourArea(contour)
+        moments = cv2.moments(contour)
+
+        print(
+            f"轮廓{index}：",
+            "点数 =", len(contour),
+            "面积 =", area,
+            "m00 =", moments["m00"]
+        )
+    print(
+    "传入轮廓检测的图片形状：",
+    binary_image.shape
+)
+    ImageProcessor.save(
+    binary_image,
+    "images/output/debug_binary.jpg"
+)
 
 test_vision()
 

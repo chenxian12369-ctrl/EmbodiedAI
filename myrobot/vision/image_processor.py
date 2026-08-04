@@ -61,6 +61,22 @@ class ImageProcessor:
         ]
 
         return cropped_image
+    @staticmethod
+    def draw_center(image, center):
+        """
+        在图片上绘制目标中心点
+        """
+
+        result = image.copy()
+
+        cv2.circle(
+            result,
+            center,
+            5,
+            (0, 0, 255),
+            -1
+        )
+        return result
 
     @staticmethod
     def save(image, path):
@@ -99,3 +115,4 @@ class ImageProcessor:
         )
 
         return result
+    
