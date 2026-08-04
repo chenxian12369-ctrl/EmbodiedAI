@@ -4,15 +4,20 @@ class RobotController:
         self,
         detection_result
     ):
-        """
-        根据检测结果移动机器人
-        """
+
+        if not detection_result.is_valid(500):
+
+            print(
+                "目标太小，忽略"
+            )
+
+            return
 
         print(
             "机器人准备移动"
         )
 
         print(
-            "目标中心：",
+            "移动目标：",
             detection_result.center
         )
