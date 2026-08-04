@@ -1,5 +1,5 @@
 import cv2
-
+from vision.detection_result import DetectionResult
 
 class Detector:
 
@@ -37,3 +37,54 @@ class Detector:
         )
 
         return center_x, center_y
+    @staticmethod
+    def get_bounding_box(contour):
+        """
+        获取轮廓的外接矩形
+        """
+
+        x, y, width, height = cv2.boundingRect(
+            contour
+        )
+
+        return x, y, width, height
+    @staticmethod
+    def analyze_contour(contour):
+
+        area = cv2.contourArea(
+            contour
+        )
+
+
+        center = Detector.find_center(
+            contour
+        )
+
+
+        bounding_box = Detector.get_bounding_box(
+            contour
+        )
+
+
+        return DetectionResult(
+            area,
+            center,
+            bounding_box
+        )
+    @staticmethod
+    def filter_contours(contours, min_area=100):
+        """
+        过滤面积过小的轮廓
+        """
+
+        valid_contours = []
+
+        for contour in contours:
+
+            area = cv2.contourArea(contour)
+
+            if area >= min_area:
+
+                valid_contours.append(contour)
+
+        return valid_contours

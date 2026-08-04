@@ -51,6 +51,28 @@ class ImageProcessor:
         )
 
         return edge_image
+    @staticmethod
+    def draw_bounding_box(
+        image,
+        bounding_box
+    ):
+        """
+        在图片上绘制目标外接矩形
+        """
+
+        result = image.copy()
+
+        x, y, width, height = bounding_box
+
+        cv2.rectangle(
+            result,
+            (x, y),
+            (x + width, y + height),
+            (255, 0, 0),
+            2
+        )
+
+        return result
 
     @staticmethod
     def crop(image, x1, y1, x2, y2):

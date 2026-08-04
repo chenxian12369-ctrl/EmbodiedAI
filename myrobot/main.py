@@ -12,7 +12,7 @@ from utils.config_loader import load_config
 from utils.config_loader import ConfigLoader
 from config.config_loader import ConfigLoader
 import cv2
-
+from controller.robot_controller import RobotController
 print(cv2.__version__)
 
 from vision.camera import Camera
@@ -195,6 +195,153 @@ def test_vision():
     binary_image,
     "images/output/debug_binary.jpg"
 )
+    # day54
+#     valid_contours = Detector.filter_contours(
+#     contours,
+#     min_area=100
+# )
+
+#     print(
+#         "有效轮廓数量：",
+#         len(valid_contours)
+#     )
+
+#     result_image = resized_image.copy()
+
+#     for index, contour in enumerate(
+#         valid_contours,
+#         start=1
+#     ):
+
+#         target_info = Detector.analyze_contour(
+#             contour
+#         )
+
+#         print(
+#             f"目标{index}信息：",
+#             target_info
+#         )
+
+#         center = target_info["center"]
+#         bounding_box = target_info["bounding_box"]
+
+#         if center is not None:
+
+#             result_image = ImageProcessor.draw_center(
+#                 result_image,
+#                 center
+#             )
+
+#         result_image = ImageProcessor.draw_bounding_box(
+#             result_image,
+#             bounding_box
+#         )
+
+#     ImageProcessor.save(
+#         result_image,
+#         "images/output/targets.jpg"
+#     )
+    # 获取轮廓
+
+    contours = Detector.find_contours(
+        binary_image
+    )
+
+
+    # 过滤
+
+    valid_contours = Detector.filter_contours(
+        contours,
+        min_area=100
+    )
+
+
+    # 保存检测结果
+
+    results=[]
+
+
+    for contour in valid_contours:
+
+
+        result = Detector.analyze_contour(
+            contour
+        )
+
+
+        results.append(result)
+
+
+        result.show()
+
+
+
+    # 找最大目标
+
+    if results:
+
+
+        largest_target=max(
+
+            results,
+
+            key=lambda x:x.area
+
+        )
+
+
+        print(
+            "最大目标"
+        )
+
+        largest_target.show()
+
+
+
+    # 绘制结果
+
+    result_image=resized_image.copy()
+
+
+    for result in results:
+
+
+        result_image=ImageProcessor.draw_center(
+
+            result_image,
+
+            result.center
+
+        )
+
+
+        result_image=ImageProcessor.draw_bounding_box(
+
+            result_image,
+
+            result.bounding_box
+
+        )
+    for result in results:
+
+        print(
+            "图像坐标:",
+            result.get_image_position()
+        )
+    controller = RobotController()
+
+    controller.move_to_target(
+        largest_target
+    )
+    ImageProcessor.save(
+
+        result_image,
+
+        "images/output/targets.jpg"
+
+    )
+
+
 
 test_vision()
 
@@ -212,7 +359,9 @@ test_vision()
 # print(image.shape)
 
 
-# print("=" * 30)
+# print("=" * 30)# 保存检测结果
+
+
 # print(SYSTEM_NAME)
 # print("=" * 30)
 
