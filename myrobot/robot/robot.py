@@ -55,6 +55,7 @@ class Robot:
             self.name = name
             self._battery = 0
             self.battery = battery
+            self.state = "idle"
 
 
     @property
@@ -78,7 +79,17 @@ class Robot:
         write_log(
         f"{self.name} 启动"
         )
-    
+    def change_state(
+        self,
+        state
+    ):
+
+        self.state = state
+
+        print(
+            "机器人状态：",
+            self.state
+        )
     def status(self):
         print("机器人：", self.name)
         print("电量：", self.battery)
@@ -131,3 +142,13 @@ class Robot:
             print(self.name, "机器人维修完成")
         else:
             print(self.name, "机器人正常")
+    def finish_task(self):
+
+        self.change_state(
+            "idle"
+        )
+
+        print(
+            self.name,
+            "任务完成"
+        )

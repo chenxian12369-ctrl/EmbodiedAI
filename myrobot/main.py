@@ -14,7 +14,7 @@ from config.config_loader import ConfigLoader
 import cv2
 from controller.robot_controller import RobotController
 print(cv2.__version__)
-
+from planner.task_planner import TaskPlanner
 from vision.camera import Camera
 from vision.image_processor import ImageProcessor
 
@@ -277,24 +277,29 @@ def test_vision():
 
 
     # 找最大目标
+    robot = Robot("A01", 80)
+    planner = TaskPlanner()
 
-    if results:
+    controller = RobotController()
 
-
-        largest_target=max(
-
-            results,
-
-            key=lambda x:x.area
-
+    selected_target = planner.select_target(
+            results
         )
 
+    if selected_target is not None:
 
+        move_result = controller.move_to_target(
+                        robot,
+                        selected_target
+                    )
+        
         print(
-            "最大目标"
-        )
-
-        largest_target.show()
+                        "移动请求结果：",
+                        move_result
+                    )
+        
+    
+        # largest_target.show()
 
 
 
@@ -328,11 +333,15 @@ def test_vision():
             "图像坐标:",
             result.get_image_position()
         )
-    controller = RobotController()
 
-    controller.move_to_target(
-        largest_target
-    )
+
+    # controller.move_to_target(
+
+    #     robot,
+
+    #     largest_target
+
+    # )
     ImageProcessor.save(
 
         result_image,
@@ -340,6 +349,36 @@ def test_vision():
         "images/output/targets.jpg"
 
     )
+    
+#day60    move_result = controller.move_to_target(
+#     robot,
+#     largest_target
+# )
+
+#     print(
+#         "移动请求结果：",
+#         move_result
+#     )
+#     second_result = controller.move_to_target(
+#     robot,
+#     largest_target
+# )
+
+#     print(
+#         "第二次移动请求结果：",
+#         second_result
+#     )
+#     robot.finish_task()
+
+#     third_result = controller.move_to_target(
+#         robot,
+#         largest_target
+#     )
+
+#     print(
+#         "第三次移动请求结果：",
+#         third_result
+#     )
 
 
 
