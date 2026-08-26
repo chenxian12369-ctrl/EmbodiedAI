@@ -49,20 +49,51 @@ class Detector:
 
         return x, y, width, height
     @staticmethod
-    def analyze_contour(contour):
+    def analyze_contour(
+        contour
+    ):
 
         area = cv2.contourArea(
             contour
         )
 
-
-        center = Detector.find_center(
+        moments = cv2.moments(
             contour
         )
 
+        if moments["m00"] == 0:
+            return None
 
-        bounding_box = Detector.get_bounding_box(
-            contour
+
+        cx = int(
+            moments["m10"]
+            /
+            moments["m00"]
+        )
+
+        cy = int(
+            moments["m01"]
+            /
+            moments["m00"]
+        )
+
+        center = (
+            cx,
+            cy
+        )
+
+
+        x, y, width, height = (
+            cv2.boundingRect(
+                contour
+            )
+        )
+
+        bounding_box = (
+            x,
+            y,
+            width,
+            height
         )
 
 
