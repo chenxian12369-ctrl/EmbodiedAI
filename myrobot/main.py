@@ -7,6 +7,7 @@ from vision.detector import Detector
 from planner.task_planner import TaskPlanner
 from controller.robot_controller import RobotController
 
+from vision.vision_pipeline import VisionPipeline
 
 def main():
 
@@ -46,18 +47,18 @@ def main():
     # =========================
 
     for frame_number, image_path in enumerate(
-        image_paths,
-        start=1
-    ):
+    image_paths,
+    start=1
+):
 
         print(
             f"\n===== 第 {frame_number} 帧 ====="
         )
 
 
-        # =====================
-        # 4. 获取当前帧
-        # =====================
+        # =========================
+        # 读取当前帧
+        # =========================
 
         image = camera.capture(
             image_path
@@ -75,101 +76,28 @@ def main():
             continue
 
 
-        # =====================
-        # 5. resize
-        # =====================
+        # =========================
+        # Day65
+        # 处理当前帧
+        # =========================
 
-        resized_image = (
-            ImageProcessor.resize(
-                image,
-                640,
-                480
-            )
+        results =  VisionPipeline.process_frame(
+            image
         )
 
 
-        # =====================
-        # 6. 灰度化
-        # =====================
+        # =========================
+        # Planner选择目标
+        # =========================
 
-        gray_image = (
-            ImageProcessor.to_gray(
-                resized_image
-            )
+        selected_target = planner.select_target(
+            results
         )
 
 
-        # =====================
-        # 7. 二值化
-        # =====================
-
-        binary_image = (
-            ImageProcessor.threshold(
-                gray_image,
-                220
-            )
-        )
-
-
-        # =====================
-        # 8. 找轮廓
-        # =====================
-
-        contours = (
-            Detector.find_contours(
-                binary_image
-            )
-        )
-
-
-        # =====================
-        # 9. 过滤小轮廓
-        # =====================
-
-        valid_contours = (
-            Detector.filter_contours(
-                contours,
-                min_area=100
-            )
-        )
-
-
-        # =====================
-        # 10. 分析轮廓
-        # =====================
-
-        results = []
-
-        for contour in valid_contours:
-
-            result = (
-                Detector.analyze_contour(
-                    contour
-                )
-            )
-
-            if result is not None:
-
-                results.append(
-                    result
-                )
-
-
-        # =====================
-        # 11. Planner选择目标
-        # =====================
-
-        selected_target = (
-            planner.select_target(
-                results
-            )
-        )
-
-
-        # =====================
-        # 12. Day64核心
-        # 目标丢失 → 重置状态
-        # =====================
+        # =========================
+        # 目标丢失
+        # =========================
 
         if selected_target is None:
 
@@ -182,14 +110,12 @@ def main():
             continue
 
 
-        # =====================
-        # 13. 判断当前目标稳定性
-        # =====================
+        # =========================
+        # 稳定判断
+        # =========================
 
-        stable = (
-            planner.is_target_stable(
-                selected_target
-            )
+        stable = planner.is_target_stable(
+            selected_target
         )
 
 
@@ -199,9 +125,9 @@ def main():
         )
 
 
-        # =====================
-        # 14. 稳定后执行移动
-        # =====================
+        # =========================
+        # 执行动作
+        # =========================
 
         if stable:
 
@@ -211,7 +137,6 @@ def main():
             )
 
             break
-
 
 if __name__ == "__main__":
 
