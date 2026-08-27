@@ -79,30 +79,15 @@ class TaskPlanner:
 
 
     def is_target_stable(
-        self,
-        detection_result
-    ):
-        """
-        判断目标是否已经连续多帧保持稳定
-        """
+    self,
+    detection_result
+):
 
-        # 当前帧目标中心
-        current_center = (
-            detection_result.center
-        )
-
-
-        # =========================
-        # 第一次检测
-        # =========================
+        current_center = detection_result.center
 
         if self.previous_center is None:
 
-            # 第一次只有当前帧，
-            # 没有上一帧可以比较
-            self.previous_center = (
-                current_center
-            )
+            self.previous_center = current_center
 
             print(
                 "记录第一帧目标：",
@@ -111,10 +96,6 @@ class TaskPlanner:
 
             return False
 
-
-        # =========================
-        # 计算当前位置和上一帧的位置差
-        # =========================
 
         distance_x = abs(
             current_center[0]
@@ -129,33 +110,15 @@ class TaskPlanner:
         )
 
 
-        # 当前帧比较结束后，
-        # 当前中心成为下一次的上一帧中心
-        self.previous_center = (
-            current_center
-        )
+        self.previous_center = current_center
 
-
-        # =========================
-        # 判断这一帧是否稳定
-        # =========================
 
         stable = (
-            distance_x
-            <=
-            self.position_tolerance
-
+            distance_x <= self.position_tolerance
             and
-
-            distance_y
-            <=
-            self.position_tolerance
+            distance_y <= self.position_tolerance
         )
 
-
-        # =========================
-        # 更新连续稳定次数
-        # =========================
 
         if stable:
 
@@ -168,18 +131,12 @@ class TaskPlanner:
 
         else:
 
-            # 只要中间出现一次明显偏移，
-            # “连续稳定”就被打断
             self.stable_count = 0
 
             print(
                 "目标位置变化较大，稳定计数清零"
             )
 
-
-        # =========================
-        # 是否达到稳定要求
-        # =========================
 
         if (
             self.stable_count
@@ -195,3 +152,10 @@ class TaskPlanner:
 
 
         return False
+    def reset_tracking(self):
+
+        self.previous_center = None
+
+        self.stable_count = 0
+
+        print("目标跟踪状态已重置")
