@@ -6,7 +6,7 @@ from vision.detector import Detector
 
 from planner.task_planner import TaskPlanner
 from controller.robot_controller import RobotController
-
+from vision.frame_source import ImageFrameSource
 from vision.vision_pipeline import VisionPipeline
 
 def main():
@@ -14,7 +14,10 @@ def main():
     # =========================
     # 1. 创建系统对象
     # =========================
-
+    frame_source = ImageFrameSource(
+        camera,
+        image_paths
+    )
     camera = Camera()
 
     robot = Robot(
@@ -46,58 +49,28 @@ def main():
     # 3. 一帧一帧处理
     # =========================
 
-    for frame_number, image_path in enumerate(
-    image_paths,
-    start=1
-):
+    frame_number = 0
+
+    while True:
+
+        image = frame_source.get_next_frame()
+
+        if image is None:
+            break
+
+        frame_number += 1
 
         print(
             f"\n===== 第 {frame_number} 帧 ====="
         )
 
-
-        # =========================
-        # 读取当前帧
-        # =========================
-
-        image = camera.capture(
-            image_path
-        )
-
-
-        if image is None:
-
-            print(
-                "当前帧读取失败"
-            )
-
-            planner.reset_tracking()
-
-            continue
-
-
-        # =========================
-        # Day65
-        # 处理当前帧
-        # =========================
-
-        results =  VisionPipeline.process_frame(
+        results = VisionPipeline.process_frame(
             image
         )
-
-
-        # =========================
-        # Planner选择目标
-        # =========================
 
         selected_target = planner.select_target(
             results
         )
-
-
-        # =========================
-        # 目标丢失
-        # =========================
 
         if selected_target is None:
 
@@ -110,24 +83,15 @@ def main():
             continue
 
 
-        # =========================
-        # 稳定判断
-        # =========================
-
         stable = planner.is_target_stable(
             selected_target
         )
-
 
         print(
             "当前稳定判断：",
             stable
         )
 
-
-        # =========================
-        # 执行动作
-        # =========================
 
         if stable:
 
