@@ -14,6 +14,13 @@ def main():
     # =========================
     # 1. 创建系统对象
     # =========================
+    image_paths = [
+        "images/frame1.png",
+        "images/no.png",
+        "images/frame3.png",
+        "images/frame4.png"
+    ]
+    camera = Camera()
     frame_source = ImageFrameSource(
         camera,
         image_paths
@@ -37,32 +44,42 @@ def main():
     # 2. 模拟连续摄像头帧
     # =========================
 
-    image_paths = [
-        "images/frame1.png",
-        "images/frame2.png",
-        "images/frame3.png",
-        "images/frame4.png"
-    ]
+
 
 
     # =========================
     # 3. 一帧一帧处理
     # =========================
 
-    frame_number = 0
 
     while True:
+        image, finished, frame_number, error = (
+    frame_source.get_next_frame()
+)
 
-        image = frame_source.get_next_frame()
-
-        if image is None:
+        if finished:
+            print("所有帧处理完成")
             break
 
-        frame_number += 1
-
         print(
-            f"\n===== 第 {frame_number} 帧 ====="
-        )
+    f"\n===== 第 {frame_number} 帧 ====="
+)
+
+        if image is None:
+
+            # 🔴【修改】在帧标题之后再打印错误
+            if error is not None:
+                print(error)
+
+            print("当前帧读取失败")
+
+            planner.reset_tracking()
+
+            continue
+
+        # print(
+        #     f"\n===== 第 {frame_number} 帧 ====="
+        # )
 
         results = VisionPipeline.process_frame(
             image

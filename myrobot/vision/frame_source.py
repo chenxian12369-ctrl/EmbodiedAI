@@ -1,43 +1,35 @@
 class ImageFrameSource:
 
-    def __init__(
-        self,
-        camera,
-        image_paths
-    ):
-
+    def __init__(self, camera, image_paths):
         self.camera = camera
         self.image_paths = image_paths
-
         self.current_index = 0
-
 
     def get_next_frame(self):
 
-        # 所有图片已经读取完
-        if (
-            self.current_index
-            >=
-            len(self.image_paths)
-        ):
+        if self.current_index >= len(self.image_paths):
+       
+            return None, True, None, None
 
-            return None
+        frame_number = self.current_index + 1
 
-
-        # 获取当前图片路径
         image_path = self.image_paths[
             self.current_index
         ]
 
-
-        # 下标向后移动
         self.current_index += 1
 
+        try:
+            image = self.camera.capture(
+                image_path
+            )
 
-        # 读取图片
-        image = self.camera.capture(
-            image_path
-        )
+        except (
+    FileNotFoundError,
+    ValueError
+        ) as error:
 
+    # 🔴【修改】不在这里打印，只把错误返回给 main
+            return None, False, frame_number, error
 
-        return image
+        return image, False, frame_number, None
