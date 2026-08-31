@@ -3,7 +3,7 @@ from robot.robot import Robot
 from vision.camera import Camera
 from vision.image_processor import ImageProcessor
 from vision.detector import Detector
-
+from vision.video_frame_source import VideoFrameSource
 from planner.task_planner import TaskPlanner
 from controller.robot_controller import RobotController
 from vision.frame_source import ImageFrameSource
@@ -14,18 +14,15 @@ def main():
     # =========================
     # 1. 创建系统对象
     # =========================
-    image_paths = [
-        "images/frame1.png",
-        "images/no.png",
-        "images/frame3.png",
-        "images/frame4.png"
-    ]
+
     camera = Camera()
-    frame_source = ImageFrameSource(
-        camera,
-        image_paths
+# 🔴【新增】视频作为帧来源
+    video_path = "videos/test.mp4"
+
+    # 🔴【修改】不再使用 ImageFrameSource
+    frame_source = VideoFrameSource(
+        video_path
     )
-    camera = Camera()
 
     robot = Robot(
         "A01",
@@ -38,7 +35,8 @@ def main():
     )
 
     controller = RobotController()
-
+# 🔴【新增】记录当前稳定目标是否已经执行过动作
+    action_executed = False
 
     # =========================
     # 2. 模拟连续摄像头帧
@@ -61,10 +59,10 @@ def main():
             print("所有帧处理完成")
             break
 
-        print(
-    f"\n===== 第 {frame_number} 帧 ====="
-)
-
+        if frame_number % 20 == 0:
+            print(
+                f"已处理到第 {frame_number} 帧"
+            )
         if image is None:
 
             # 🔴【修改】在帧标题之后再打印错误
@@ -74,6 +72,7 @@ def main():
             print("当前帧读取失败")
 
             planner.reset_tracking()
+            action_executed = False
 
             continue
 
@@ -96,7 +95,7 @@ def main():
             )
 
             planner.reset_tracking()
-
+            action_executed = False
             continue
 
 
@@ -110,15 +109,16 @@ def main():
         )
 
 
-        if stable:
-
+        if stable and not action_executed:
             controller.move_to_target(
-                robot,
-                selected_target
-            )
-
-            break
-
+                        robot,
+                        selected_target
+                    )
+                    
+            action_executed = True
+                            
+# 🔴【新增】视频处理结束后释放资源
+    frame_source.release()
 if __name__ == "__main__":
 
     main()

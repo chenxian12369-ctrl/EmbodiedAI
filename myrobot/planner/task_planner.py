@@ -43,6 +43,8 @@ class TaskPlanner:
 
             # 目前仍然使用面积 > 500
             # 作为有效目标判断条件
+            if result is None:
+                continue
             if result.is_valid(500):
 
                 valid_results.append(
