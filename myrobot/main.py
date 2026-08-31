@@ -1,5 +1,5 @@
 from robot.robot import Robot
-
+from robot.robot_state import RobotState
 from vision.camera import Camera
 from vision.image_processor import ImageProcessor
 from vision.detector import Detector
@@ -36,7 +36,7 @@ def main():
 
     controller = RobotController()
 # 🔴【新增】记录当前稳定目标是否已经执行过动作
-    action_executed = False
+    state = RobotState.SEARCHING
 
     # =========================
     # 2. 模拟连续摄像头帧
@@ -72,7 +72,6 @@ def main():
             print("当前帧读取失败")
 
             planner.reset_tracking()
-            action_executed = False
 
             continue
 
@@ -95,8 +94,11 @@ def main():
             )
 
             planner.reset_tracking()
-            action_executed = False
+            state = RobotState.SEARCHING
+
             continue
+        if state == RobotState.SEARCHING:
+            state = RobotState.TRACKING
 
 
         stable = planner.is_target_stable(
@@ -107,15 +109,27 @@ def main():
             "当前稳定判断：",
             stable
         )
+        # 🔴【新增】Day68 状态机调试
+        # print("当前机器人状态：", state.value)
 
 
-        if stable and not action_executed:
+        if stable and state == RobotState.TRACKING:
+
+            # 🔴【新增】目标稳定
+            state = RobotState.STABLE
+
+            print(
+                "机器人状态：",
+                state.value
+            )
+
+            # 🔴【新增】开始执行动作
+            state = RobotState.MOVING
+
             controller.move_to_target(
-                        robot,
-                        selected_target
-                    )
-                    
-            action_executed = True
+                robot,
+                selected_target
+            )
                             
 # 🔴【新增】视频处理结束后释放资源
     frame_source.release()
