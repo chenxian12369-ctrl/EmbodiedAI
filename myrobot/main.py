@@ -8,7 +8,7 @@ from planner.task_planner import TaskPlanner
 from controller.robot_controller import RobotController
 from vision.frame_source import ImageFrameSource
 from vision.vision_pipeline import VisionPipeline
-
+from robot.robot_state_machine import RobotStateMachine
 def main():
 
     # =========================
@@ -36,8 +36,8 @@ def main():
 
     controller = RobotController()
 # 🔴【新增】记录当前稳定目标是否已经执行过动作
-    state = RobotState.SEARCHING
-
+# 🔴【新增】创建机器人状态机
+    state_machine = RobotStateMachine()
     # =========================
     # 2. 模拟连续摄像头帧
     # =========================
@@ -94,13 +94,14 @@ def main():
             )
 
             planner.reset_tracking()
-            state = RobotState.SEARCHING
+
+            # 🔴【修改】告诉状态机：目标丢失
+            state_machine.target_lost()
 
             continue
-        if state == RobotState.SEARCHING:
-            state = RobotState.TRACKING
+        
 
-
+        state_machine.target_found()
         stable = planner.is_target_stable(
             selected_target
         )
@@ -113,23 +114,28 @@ def main():
         # print("当前机器人状态：", state.value)
 
 
-        if stable and state == RobotState.TRACKING:
+        if stable:
 
-            # 🔴【新增】目标稳定
-            state = RobotState.STABLE
+            state_machine.target_stable()
 
-            print(
-                "机器人状态：",
-                state.value
-            )
+            if state_machine.is_stable():
 
-            # 🔴【新增】开始执行动作
-            state = RobotState.MOVING
+                print(
+                    "机器人状态：",
+                    state_machine.get_state().value
+                )
 
-            controller.move_to_target(
-                robot,
-                selected_target
-            )
+                state_machine.start_moving()
+
+                print(
+                    "机器人状态：",
+                    state_machine.get_state().value
+                )
+
+                controller.move_to_target(
+                    robot,
+                    selected_target
+                )
                             
 # 🔴【新增】视频处理结束后释放资源
     frame_source.release()
