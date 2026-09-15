@@ -89,14 +89,19 @@ def main():
 
         if selected_target is None:
 
-            print(
-                "当前帧目标丢失"
+    # 🔴【修改】先让状态机判断是不是真的丢失
+            confirmed_lost = (
+                state_machine.target_lost()
             )
 
-            planner.reset_tracking()
+            # 🔴【新增】只有连续丢失达到阈值才重置跟踪
+            if confirmed_lost:
 
-            # 🔴【修改】告诉状态机：目标丢失
-            state_machine.target_lost()
+                print(
+                    "确认目标丢失"
+                )
+
+                planner.reset_tracking()
 
             continue
         
@@ -106,10 +111,10 @@ def main():
             selected_target
         )
 
-        print(
-            "当前稳定判断：",
-            stable
-        )
+        # print(
+        #     "当前稳定判断：",
+        #     stable
+        # )
         # 🔴【新增】Day68 状态机调试
         # print("当前机器人状态：", state.value)
 

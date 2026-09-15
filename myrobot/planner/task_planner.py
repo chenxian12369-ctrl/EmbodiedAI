@@ -71,10 +71,10 @@ class TaskPlanner:
         )
 
 
-        print(
-            "任务规划器选择目标：",
-            largest_target.center
-        )
+        # print(
+        #     "任务规划器选择目标：",
+        #     largest_target.center
+        # )
 
 
         return largest_target
@@ -126,10 +126,10 @@ class TaskPlanner:
 
             self.stable_count += 1
 
-            print(
-                "连续稳定次数：",
-                self.stable_count
-            )
+            # print(
+            #     "连续稳定次数：",
+            #     self.stable_count
+            # )
 
         else:
 
@@ -146,9 +146,9 @@ class TaskPlanner:
             self.required_stable_frames
         ):
 
-            print(
-                "目标已连续多帧稳定"
-            )
+            # print(
+            #     "目标已连续多帧稳定"
+            # )
 
             return True
 
