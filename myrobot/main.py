@@ -199,13 +199,74 @@ def test_closed_loop(
                 "达到最大测试次数，停止"
             )
             break
+def test_inertia_control(
+    kp,
+    initial_error=-200.0,
+    tolerance=5,
+    damping=0.9
+):
+
+    error = initial_error
+    velocity = 0.0
+    step = 0
+
+    print(
+        f"\n惯性模型测试 Kp = {kp}"
+    )
+
+    while step < 50:
+
+        # P控制输出
+        control = (
+            kp * error
+        )
+
+        # 🔴【新增】控制影响速度
+        velocity = (
+            velocity + control
+        )
+
+        # 🔴【新增】简单阻尼，模拟摩擦/能量损失
+        velocity = (
+            velocity * damping
+        )
+
+        # 🔴【新增】速度进一步改变误差
+        error = (
+            error - velocity
+        )
+
+        step += 1
+
+        print(
+            f"第{step}次：",
+            "control =",
+            round(control, 2),
+            "velocity =",
+            round(velocity, 2),
+            "error =",
+            round(error, 2)
+        )
+
+        if (
+            abs(error) <= tolerance
+            and abs(velocity) <= 1
+        ):
+            print(
+                "系统已稳定"
+            )
+            break
 if __name__ == "__main__":
     # test_closed_loop()
     #  main()
-    test_closed_loop(0.05)
-    test_closed_loop(0.1)
-    test_closed_loop(0.5)
-    test_closed_loop(1.0)
-    test_closed_loop(1.5)
-    test_closed_loop(2.0)
-    test_closed_loop(2.2)
+    test_inertia_control(
+        kp=0.05
+    )
+
+    test_inertia_control(
+        kp=0.1
+    )
+
+    test_inertia_control(
+        kp=0.2
+    )
