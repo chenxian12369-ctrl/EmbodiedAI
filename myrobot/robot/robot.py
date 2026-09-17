@@ -56,7 +56,24 @@ class Robot:
             self._battery = 0
             self.battery = battery
             self.state = "idle"
+            self.position_x = 0.0
+            self.position_y = 0.0
+    def apply_control(
+    self,
+    control_x,
+    control_y
+):
 
+        self.position_x += control_x
+        self.position_y += control_y
+
+        print(
+            "机器人模拟位置：",
+            (
+                round(self.position_x, 2),
+                round(self.position_y, 2)
+            )
+        )
 
     @property
     def battery(self):

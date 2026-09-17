@@ -119,9 +119,12 @@ class RobotController:
             "P控制输出：",
             control
         )
-
+        robot.apply_control(
+            control[0],
+            control[1]
+        )
         print(
-            "移动到：",
+            "目标像素位置：",
             detection_result.center
         )
 

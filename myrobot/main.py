@@ -35,29 +35,8 @@ def main():
     )
 
     controller = RobotController()
-    print(
-    controller.is_error_within_tolerance(
-        (4, -3)
-    )
-)
-
-    print(
-        controller.is_error_within_tolerance(
-            (6, 2)
-        )
-    )
-
-    print(
-        controller.is_error_within_tolerance(
-            (-5, 5)
-        )
-    )
-
-    print(
-        controller.is_error_within_tolerance(
-            (-7, -8)
-        )
-    )
+    
+   
 # 🔴【新增】记录当前稳定目标是否已经执行过动作
 # 🔴【新增】创建机器人状态机
     state_machine = RobotStateMachine()
@@ -181,6 +160,31 @@ def main():
                             
 # 🔴【新增】视频处理结束后释放资源
     frame_source.release()
-if __name__ == "__main__":
+def test_closed_loop():
 
-    main()
+        error_x = -200.0
+        kp = 0.1
+        tolerance = 5
+
+        step = 0
+
+        while abs(error_x) > tolerance:
+
+            control_x = kp * error_x
+
+            error_x = (
+                error_x - control_x
+            )
+
+            step += 1
+
+            print(
+                f"第{step}次控制：",
+                "control =",
+                round(control_x, 2),
+                "error =",
+                round(error_x, 2)
+            )
+if __name__ == "__main__":
+    # test_closed_loop()
+     main()
