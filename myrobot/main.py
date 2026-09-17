@@ -63,6 +63,20 @@ def main():
             print(
                 f"已处理到第 {frame_number} 帧"
             )
+        # 🔴【新增】ERROR 状态锁定 
+        if state_machine.is_error(): 
+        
+            command = input( 
+                "机器人处于 ERROR，输入 r 执行恢复：" 
+            ) 
+        
+            if command == "r": 
+        
+                state_machine.recover() 
+        
+                planner.reset_tracking() 
+        
+            continue
         if image is None:
 
             # 🔴【修改】在帧标题之后再打印错误

@@ -66,10 +66,19 @@ class RobotStateMachine:
                 self.state.value,
                 "不能直接进入 moving"
             )
+    def is_error(self):
+        return self.state == RobotState.ERROR
+
+
+    def recover(self):
+
+        if self.state == RobotState.ERROR:
+
+            self._transition_to(
+                RobotState.SEARCHING
+            )
     def target_lost(self):
 
-        # 🔴【新增】已经处于 SEARCHING，
-        # 就没有必要继续统计“目标丢失”
         if self.state == RobotState.SEARCHING:
             return False
 
@@ -86,10 +95,17 @@ class RobotStateMachine:
         ):
             return False
 
-        # 🔴【修改】达到连续丢失阈值
-        self._transition_to(
-            RobotState.SEARCHING
-        )
+        if self.state == RobotState.MOVING:
+
+            self._transition_to(
+                RobotState.ERROR
+            )
+
+        else:
+
+            self._transition_to(
+                RobotState.SEARCHING
+            )
 
         self.lost_count = 0
 

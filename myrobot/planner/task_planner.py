@@ -29,9 +29,7 @@ class TaskPlanner:
         # 没有任何检测结果
         if not results:
 
-            print(
-                "没有检测到目标"
-            )
+            
 
             return None
 
@@ -56,9 +54,7 @@ class TaskPlanner:
         # 但是没有符合要求的目标
         if not valid_results:
 
-            print(
-                "没有符合要求的有效目标"
-            )
+
 
             return None
 
