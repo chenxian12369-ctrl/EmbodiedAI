@@ -160,31 +160,52 @@ def main():
                             
 # 🔴【新增】视频处理结束后释放资源
     frame_source.release()
-def test_closed_loop():
+def test_closed_loop(
+    kp,
+    initial_error=-200.0,
+    tolerance=5
+):
 
-        error_x = -200.0
-        kp = 0.1
-        tolerance = 5
+    error_x = initial_error
+    step = 0
 
-        step = 0
+    print(
+        f"\n开始测试 Kp = {kp}"
+    )
 
-        while abs(error_x) > tolerance:
+    while abs(error_x) > tolerance:
 
-            control_x = kp * error_x
+        control_x = (
+            kp * error_x
+        )
 
-            error_x = (
-                error_x - control_x
-            )
+        error_x = (
+            error_x - control_x
+        )
 
-            step += 1
+        step += 1
 
+        print(
+            f"第{step}次控制：",
+            "control =",
+            round(control_x, 2),
+            "error =",
+            round(error_x, 2)
+        )
+
+        # 🔴【新增】防止发散后无限循环
+        if step >= 50:
             print(
-                f"第{step}次控制：",
-                "control =",
-                round(control_x, 2),
-                "error =",
-                round(error_x, 2)
+                "达到最大测试次数，停止"
             )
+            break
 if __name__ == "__main__":
     # test_closed_loop()
-     main()
+    #  main()
+    test_closed_loop(0.05)
+    test_closed_loop(0.1)
+    test_closed_loop(0.5)
+    test_closed_loop(1.0)
+    test_closed_loop(1.5)
+    test_closed_loop(2.0)
+    test_closed_loop(2.2)
