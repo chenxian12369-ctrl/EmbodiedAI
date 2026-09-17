@@ -1,13 +1,22 @@
 class RobotController:
     def __init__(
-        self,
-        image_width=640,
-        image_height=480
-    ):
+    self,
+    image_width=640,
+    image_height=480,
+    kp=0.1,
+    control_tolerance=5
+):
 
         self.image_center = (
             image_width // 2,
             image_height // 2
+        )
+
+        self.kp = kp
+
+        # 🔴【新增】
+        self.control_tolerance = (
+            control_tolerance
         )
     def calculate_visual_error(
         self,
@@ -34,7 +43,39 @@ class RobotController:
             error_x,
             error_y
         )
+    def calculate_control(
+    self,
+    visual_error
+):
 
+        error_x, error_y = visual_error
+
+        control_x = (
+            self.kp * error_x
+        )
+
+        control_y = (
+            self.kp * error_y
+        )
+
+        return (
+            control_x,
+            control_y
+        )
+    def is_error_within_tolerance(
+        self,
+        visual_error
+    ):
+
+        error_x, error_y = visual_error
+
+        return (
+            abs(error_x)
+            <= self.control_tolerance
+            and
+            abs(error_y)
+            <= self.control_tolerance
+        )
     def move_to_target(
         self,
         robot,
@@ -57,6 +98,26 @@ class RobotController:
         print(
             "视觉误差：",
             visual_error
+        )
+        control = (
+    self.calculate_control(
+        visual_error
+    )
+)
+        if self.is_error_within_tolerance(
+    visual_error
+):
+
+            print(
+                "目标已进入控制容差范围"
+            )
+
+            return True
+
+        # 🔴【新增】
+        print(
+            "P控制输出：",
+            control
         )
 
         print(

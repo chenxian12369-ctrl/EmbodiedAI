@@ -35,6 +35,29 @@ def main():
     )
 
     controller = RobotController()
+    print(
+    controller.is_error_within_tolerance(
+        (4, -3)
+    )
+)
+
+    print(
+        controller.is_error_within_tolerance(
+            (6, 2)
+        )
+    )
+
+    print(
+        controller.is_error_within_tolerance(
+            (-5, 5)
+        )
+    )
+
+    print(
+        controller.is_error_within_tolerance(
+            (-7, -8)
+        )
+    )
 # 🔴【新增】记录当前稳定目标是否已经执行过动作
 # 🔴【新增】创建机器人状态机
     state_machine = RobotStateMachine()
