@@ -160,78 +160,58 @@ def main():
                             
 # 🔴【新增】视频处理结束后释放资源
     frame_source.release()
-def test_closed_loop(
+def test_pd_control(
     kp,
-    initial_error=-200.0,
-    tolerance=5
-):
-
-    error_x = initial_error
-    step = 0
-
-    print(
-        f"\n开始测试 Kp = {kp}"
-    )
-
-    while abs(error_x) > tolerance:
-
-        control_x = (
-            kp * error_x
-        )
-
-        error_x = (
-            error_x - control_x
-        )
-
-        step += 1
-
-        print(
-            f"第{step}次控制：",
-            "control =",
-            round(control_x, 2),
-            "error =",
-            round(error_x, 2)
-        )
-
-        # 🔴【新增】防止发散后无限循环
-        if step >= 50:
-            print(
-                "达到最大测试次数，停止"
-            )
-            break
-def test_inertia_control(
-    kp,
+    kd,
     initial_error=-200.0,
     tolerance=5,
     damping=0.9
 ):
 
     error = initial_error
+    previous_error = error
     velocity = 0.0
     step = 0
 
     print(
-        f"\n惯性模型测试 Kp = {kp}"
+        f"\nPD测试 Kp={kp}, Kd={kd}"
     )
 
     while step < 50:
 
-        # P控制输出
-        control = (
+        # P项
+        p_output = (
             kp * error
         )
 
-        # 🔴【新增】控制影响速度
+        # D项
+        derivative = (
+            error - previous_error
+        )
+
+        d_output = (
+            kd * derivative
+        )
+
+        # PD控制输出
+        control = (
+            p_output + d_output
+        )
+
+        # 保存当前误差，供下一轮使用
+        previous_error = error
+
+        # 控制影响速度
         velocity = (
             velocity + control
         )
 
-        # 🔴【新增】简单阻尼，模拟摩擦/能量损失
+        # 阻尼
         velocity = (
             velocity * damping
         )
 
-        # 🔴【新增】速度进一步改变误差
+        # 速度改变误差
         error = (
             error - velocity
         )
@@ -240,8 +220,10 @@ def test_inertia_control(
 
         print(
             f"第{step}次：",
-            "control =",
-            round(control, 2),
+            "P =",
+            round(p_output, 2),
+            "D =",
+            round(d_output, 2),
             "velocity =",
             round(velocity, 2),
             "error =",
@@ -256,17 +238,11 @@ def test_inertia_control(
                 "系统已稳定"
             )
             break
+
 if __name__ == "__main__":
     # test_closed_loop()
     #  main()
-    test_inertia_control(
-        kp=0.05
-    )
-
-    test_inertia_control(
-        kp=0.1
-    )
-
-    test_inertia_control(
-        kp=0.2
+    test_pd_control(
+        kp=0.1,
+        kd=1
     )
