@@ -160,21 +160,21 @@ def main():
                             
 # 🔴【新增】视频处理结束后释放资源
     frame_source.release()
-def test_pd_control(
+# 🔴【新增】
+def test_pi_control(
     kp,
-    kd,
-    initial_error=-200.0,
-    tolerance=5,
-    damping=0.9
+    ki,
+    initial_error=-100.0,
+    tolerance=1,
+    resistance=3.0
 ):
 
     error = initial_error
-    previous_error = error
-    velocity = 0.0
+    integral = 0.0
     step = 0
 
     print(
-        f"\nPD测试 Kp={kp}, Kd={kd}"
+        f"\nPI测试 Kp={kp}, Ki={ki}"
     )
 
     while step < 50:
@@ -184,36 +184,38 @@ def test_pd_control(
             kp * error
         )
 
-        # D项
-        derivative = (
-            error - previous_error
+        # I项累计
+        integral += error
+
+        i_output = (
+            ki * integral
         )
 
-        d_output = (
-            kd * derivative
-        )
-
-        # PD控制输出
         control = (
-            p_output + d_output
+            p_output + i_output
         )
 
-        # 保存当前误差，供下一轮使用
-        previous_error = error
+        # 🔴 模拟固定阻力/死区
+        if control < 0:
 
-        # 控制影响速度
-        velocity = (
-            velocity + control
-        )
+            effective_control = (
+                min(
+                    0,
+                    control + resistance
+                )
+            )
 
-        # 阻尼
-        velocity = (
-            velocity * damping
-        )
+        else:
 
-        # 速度改变误差
+            effective_control = (
+                max(
+                    0,
+                    control - resistance
+                )
+            )
+
         error = (
-            error - velocity
+            error - effective_control
         )
 
         step += 1
@@ -222,27 +224,27 @@ def test_pd_control(
             f"第{step}次：",
             "P =",
             round(p_output, 2),
-            "D =",
-            round(d_output, 2),
-            "velocity =",
-            round(velocity, 2),
+            "I =",
+            round(i_output, 2),
+            "control =",
+            round(control, 2),
+            "effective =",
+            round(effective_control, 2),
             "error =",
             round(error, 2)
         )
 
-        if (
-            abs(error) <= tolerance
-            and abs(velocity) <= 1
-        ):
-            print(
-                "系统已稳定"
-            )
-            break
+        if abs(error) <= tolerance:
 
+            print(
+                "系统已进入目标范围"
+            )
+
+            break
 if __name__ == "__main__":
     # test_closed_loop()
     #  main()
-    test_pd_control(
+    test_pi_control(
         kp=0.1,
-        kd=1
+        ki=0.01
     )
