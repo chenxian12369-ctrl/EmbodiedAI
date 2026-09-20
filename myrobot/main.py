@@ -9,6 +9,29 @@ from controller.robot_controller import RobotController
 from vision.frame_source import ImageFrameSource
 from vision.vision_pipeline import VisionPipeline
 from robot.robot_state_machine import RobotStateMachine
+from controller.pid_controller import (
+    PIDController
+)
+controller = RobotController()
+import inspect
+
+print(
+    "RobotController加载文件：",
+    inspect.getfile(RobotController)
+)
+
+print(
+    "RobotController拥有的方法：",
+    RobotController.__dict__.keys()
+)
+
+print(
+    "是否存在move_to_target：",
+    hasattr(
+        controller,
+        "move_to_target"
+    )
+)
 def main():
 
     # =========================
@@ -161,100 +184,38 @@ def main():
 # 🔴【新增】视频处理结束后释放资源
     frame_source.release()
 # 🔴【新增】
-def test_pi_control(
-    kp,
-    ki,
-    initial_error=-100.0,
-    tolerance=1,
-    resistance=3.0,
-    integral_limit=300
-):
+def test_pid_controller():
 
-    error = initial_error
-    integral = 0.0
-    step = 0
-
-    print(
-        f"\nPI测试 Kp={kp}, Ki={ki}"
+    pid = PIDController(
+        kp=0.1,
+        ki=0.01,
+        kd=0.5,
+        integral_limit=300
     )
 
-    while step < 50:
+    errors = [
+        -100,
+        -80,
+        -60,
+        -40,
+        -20,
+        -10,
+        -5
+    ]
 
-        # P项
-        p_output = (
-            kp * error
+    for error in errors:
+
+        control = pid.update(
+            error
         )
-
-        # I项累计
-        integral += error
-        integral = max(
-            -integral_limit,
-            min(
-                integral,
-                integral_limit
-            )
-        )
-        i_output = (
-            ki * integral
-        )
-
-        control = (
-            p_output + i_output
-        )
-
-        # 🔴 模拟固定阻力/死区
-        if control < 0:
-
-            effective_control = (
-                min(
-                    0,
-                    control + resistance
-                )
-            )
-
-        else:
-
-            effective_control = (
-                max(
-                    0,
-                    control - resistance
-                )
-            )
-
-        error = (
-            error - effective_control
-        )
-
-        step += 1
 
         print(
-    f"第{step}次：",
-    "P =",
-    round(p_output, 2),
-    "integral =",
-    round(integral, 2),
-    "I =",
-    round(i_output, 2),
-    "control =",
-    round(control, 2),
-    "effective =",
-    round(effective_control, 2),
-    "error =",
-    round(error, 2)
-)
-
-        if abs(error) <= tolerance:
-
-            print(
-                "系统已进入目标范围"
-            )
-
-            break
+            "error =",
+            error,
+            "control =",
+            round(control, 2)
+        )
 if __name__ == "__main__":
-    # test_closed_loop()
-    #  main()
-    test_pi_control(
-    kp=0.1,
-    ki=0.01,
-    integral_limit=300
-)
+
+    main()
+    # test_pid_controller()

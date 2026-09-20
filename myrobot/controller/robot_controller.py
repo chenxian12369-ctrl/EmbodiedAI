@@ -1,9 +1,14 @@
+from controller.pid_controller import (
+    PIDController
+)
 class RobotController:
     def __init__(
     self,
     image_width=640,
     image_height=480,
     kp=0.1,
+    ki=0.01,
+    kd=0.5,
     control_tolerance=5
 ):
 
@@ -12,12 +17,26 @@ class RobotController:
             image_height // 2
         )
 
-        self.kp = kp
-
-        # 🔴【新增】
         self.control_tolerance = (
             control_tolerance
         )
+
+        # 🔴【新增】X轴 PID
+        self.pid_x = PIDController(
+            kp=kp,
+            ki=ki,
+            kd=kd,
+            integral_limit=300
+        )
+
+        # 🔴【新增】Y轴 PID
+        self.pid_y = PIDController(
+            kp=kp,
+            ki=ki,
+            kd=kd,
+            integral_limit=300
+        )
+
     def calculate_visual_error(
         self,
         detection_result
@@ -51,11 +70,15 @@ class RobotController:
         error_x, error_y = visual_error
 
         control_x = (
-            self.kp * error_x
+            self.pid_x.update(
+                error_x
+            )
         )
 
         control_y = (
-            self.kp * error_y
+            self.pid_y.update(
+                error_y
+            )
         )
 
         return (
@@ -76,6 +99,14 @@ class RobotController:
             abs(error_y)
             <= self.control_tolerance
         )
+    def reset_control(self):
+
+        self.pid_x.reset()
+        self.pid_y.reset()
+
+        print(
+            "PID控制器状态已重置"
+        )
     def move_to_target(
         self,
         robot,
@@ -89,24 +120,23 @@ class RobotController:
             )
 
             return False
+        
+
         visual_error = (
-            self.calculate_visual_error(
-                detection_result
-            )
-        )
+    self.calculate_visual_error(
+        detection_result
+    )
+)
 
         print(
             "视觉误差：",
             visual_error
         )
-        control = (
-    self.calculate_control(
-        visual_error
-    )
-)
+
+        # 🔴【先判断容差】
         if self.is_error_within_tolerance(
-    visual_error
-):
+            visual_error
+        ):
 
             print(
                 "目标已进入控制容差范围"
@@ -114,14 +144,20 @@ class RobotController:
 
             return True
 
+        # 🔴【确认还需要控制，再更新PID】
+        control = (
+            self.calculate_control(
+                visual_error
+            )
+        )
+
         # 🔴【新增】
         print(
-            "P控制输出：",
-            control
-        )
-        robot.apply_control(
-            control[0],
-            control[1]
+            "PID控制输出：",
+            (
+                round(control[0], 2),
+                round(control[1], 2)
+            )
         )
         print(
             "目标像素位置：",

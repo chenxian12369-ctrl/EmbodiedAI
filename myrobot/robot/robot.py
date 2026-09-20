@@ -74,6 +74,7 @@ class Robot:
                 round(self.position_y, 2)
             )
         )
+        
 
     @property
     def battery(self):
