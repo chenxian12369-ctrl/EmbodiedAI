@@ -166,7 +166,8 @@ def test_pi_control(
     ki,
     initial_error=-100.0,
     tolerance=1,
-    resistance=3.0
+    resistance=3.0,
+    integral_limit=300
 ):
 
     error = initial_error
@@ -186,7 +187,13 @@ def test_pi_control(
 
         # I项累计
         integral += error
-
+        integral = max(
+            -integral_limit,
+            min(
+                integral,
+                integral_limit
+            )
+        )
         i_output = (
             ki * integral
         )
@@ -221,18 +228,20 @@ def test_pi_control(
         step += 1
 
         print(
-            f"第{step}次：",
-            "P =",
-            round(p_output, 2),
-            "I =",
-            round(i_output, 2),
-            "control =",
-            round(control, 2),
-            "effective =",
-            round(effective_control, 2),
-            "error =",
-            round(error, 2)
-        )
+    f"第{step}次：",
+    "P =",
+    round(p_output, 2),
+    "integral =",
+    round(integral, 2),
+    "I =",
+    round(i_output, 2),
+    "control =",
+    round(control, 2),
+    "effective =",
+    round(effective_control, 2),
+    "error =",
+    round(error, 2)
+)
 
         if abs(error) <= tolerance:
 
@@ -245,6 +254,7 @@ if __name__ == "__main__":
     # test_closed_loop()
     #  main()
     test_pi_control(
-        kp=0.1,
-        ki=0.01
-    )
+    kp=0.1,
+    ki=0.01,
+    integral_limit=300
+)
