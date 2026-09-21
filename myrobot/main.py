@@ -12,25 +12,23 @@ from robot.robot_state_machine import RobotStateMachine
 from controller.pid_controller import (
     PIDController
 )
-controller = RobotController()
-import inspect
 
-print(
-    "RobotController加载文件：",
-    inspect.getfile(RobotController)
+a = torch.tensor(
+    [1.0, 2.0, 3.0]
+)
+
+b = torch.tensor(
+    [4.0, 5.0, 6.0]
 )
 
 print(
-    "RobotController拥有的方法：",
-    RobotController.__dict__.keys()
+    "a + b =",
+    a + b
 )
 
 print(
-    "是否存在move_to_target：",
-    hasattr(
-        controller,
-        "move_to_target"
-    )
+    "a * b =",
+    a * b
 )
 def main():
 
