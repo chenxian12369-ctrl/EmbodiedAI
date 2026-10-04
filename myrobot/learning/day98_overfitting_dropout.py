@@ -1,68 +1,83 @@
 # import torch
 # import torch.nn as nn
 
-# from torch.utils.data import (
-#     TensorDataset,
-#     DataLoader,
-#     random_split
+# from torch.utils.data import DataLoader
+
+# from torchvision import (
+#     datasets,
+#     transforms
+# )
+# transform = transforms.ToTensor()
+
+# train_dataset = datasets.MNIST(
+#     root="data",
+#     train=True,
+#     download=True,
+#     transform=transform
 # )
 
-# sample_count = 1000
-
-# x = torch.randn(
-#     sample_count,
-#     2
+# validation_dataset = datasets.MNIST(
+#     root="data",
+#     train=False,
+#     download=True,
+#     transform=transform
 # )
 
-# target = (
-#     x[:, 0]
-#     + x[:, 1]
-#     > 0
-# ).long()
-
-# dataset = TensorDataset(
-#     x,
-#     target
-# )
-
-# train_size = 800
-# validation_size = 200
-
-# train_dataset, validation_dataset = (
-#     random_split(
-#         dataset,
-#         [
-#             train_size,
-#             validation_size
-#         ]
-#     )
-# )
 # train_loader = DataLoader(
 #     train_dataset,
-#     batch_size=32,
+#     batch_size=64,
 #     shuffle=True
 # )
+
 # validation_loader = DataLoader(
 #     validation_dataset,
-#     batch_size=32,
+#     batch_size=64,
 #     shuffle=False
 # )
-# class ClassificationNetwork(nn.Module):
+# class MNISTCNNWithDropout(nn.Module):
 
 #     def __init__(self):
 
 #         super().__init__()
 
-#         self.fc1 = nn.Linear(
-#             2,
-#             16
+#         self.conv1 = nn.Conv2d(
+#             1,
+#             8,
+#             kernel_size=3,
+#             padding=1
 #         )
 
-#         self.relu = nn.ReLU()
+#         self.relu1 = nn.ReLU()
 
-#         self.fc2 = nn.Linear(
-#             16,
+#         self.pool1 = nn.MaxPool2d(
+#             2,
 #             2
+#         )
+
+#         self.conv2 = nn.Conv2d(
+#             8,
+#             16,
+#             kernel_size=3,
+#             padding=1
+#         )
+
+#         self.relu2 = nn.ReLU()
+
+#         self.pool2 = nn.MaxPool2d(
+#             2,
+#             2
+#         )
+
+#         self.flatten = nn.Flatten()
+
+#         # 🔴【新增】
+#         self.dropout = nn.Dropout(
+#             p=0.5
+#         )
+
+#         self.fc = nn.Linear(
+#             16 * 7 * 7,
+#             10
 #         )
 
 #     def forward(
@@ -70,27 +85,33 @@
 #         x
 #     ):
 
-#         x = self.fc1(x)
+#         x = self.conv1(x)
+#         x = self.relu1(x)
+#         x = self.pool1(x)
 
-#         x = self.relu(x)
+#         x = self.conv2(x)
+#         x = self.relu2(x)
+#         x = self.pool2(x)
 
-#         x = self.fc2(x)
+#         x = self.flatten(x)
+
+#         # 🔴【新增】
+#         x = self.dropout(x)
+
+#         x = self.fc(x)
 
 #         return x
-# model = ClassificationNetwork()
+# model = MNISTCNNWithDropout()
+
 # criterion = nn.CrossEntropyLoss()
-# optimizer = torch.optim.SGD(
+
+# optimizer = torch.optim.Adam(
 #     model.parameters(),
-#     lr=0.1
+#     lr=0.001
 # )
-# epochs = 10
 
-
+# epochs = 5
 # for epoch in range(epochs):
-
-#     # =========================
-#     # 1. 训练阶段
-#     # =========================
 
 #     model.train()
 
@@ -120,14 +141,10 @@
 #             dim=1
 #         )
 
-#         correct = (
+#         train_correct += (
 #             predicted_classes
 #             == batch_target
-#         )
-
-#         train_correct += (
-#             correct.sum().item()
-#         )
+#         ).sum().item()
 
 #         train_total += (
 #             batch_target.size(0)
@@ -138,8 +155,6 @@
 #             * batch_x.size(0)
 #         )
 
-#     # 🔴【修改】
-#     # 整个训练集跑完以后再计算
 #     average_train_loss = (
 #         total_train_loss
 #         / len(train_dataset)
@@ -149,21 +164,10 @@
 #         train_correct
 #         / train_total
 #     )
-
-#     # =========================
-#     # 2. 验证阶段
-#     # =========================
-
-#     # 🔴【新增】
 #     model.eval()
 
-#     # 🔴【新增】
 #     total_validation_loss = 0.0
-
-#     # 🔴【新增】
 #     validation_correct = 0
-
-#     # 🔴【新增】
 #     validation_total = 0
 
 #     with torch.no_grad():
@@ -184,14 +188,10 @@
 #                 dim=1
 #             )
 
-#             correct = (
+#             validation_correct += (
 #                 predicted_classes
 #                 == batch_target
-#             )
-
-#             validation_correct += (
-#                 correct.sum().item()
-#             )
+#             ).sum().item()
 
 #             validation_total += (
 #                 batch_target.size(0)
@@ -211,11 +211,6 @@
 #         validation_correct
 #         / validation_total
 #     )
-
-#     # =========================
-#     # 3. 打印本轮结果
-#     # =========================
-
 
 #     print(
 #         f"Epoch {epoch + 1}",
