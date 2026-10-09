@@ -40,17 +40,17 @@ print(
 # =========================
 
 best_model_path = (
-    "runs/day109/"
-    "coco8_training/"
-    "weights/best.pt"
+    model.trainer.best
 )
-
 
 print(
     "Best model path:",
     best_model_path
 )
-
+print(
+    "Best model path:",
+    best_model_path
+)
 
 # =========================
 # 4. 加载best model
